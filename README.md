@@ -12,9 +12,9 @@ LimoPro/
 └── scripts/          # 只读采集车端源码的工具
 ```
 
-阅读代码从[底盘与导航代码索引](docs/code-guide.md)开始；版本维护方式见[代码维护流程](docs/code-maintenance.md)。
+阅读代码从[底盘与导航代码索引](docs/01-项目与开发/底盘与导航代码索引.md)开始；版本维护方式见[代码维护流程](docs/01-项目与开发/代码维护流程.md)。所有文档按用途整理在[文档导航](docs/README.md)中。
 
-这是项目核心源码的初始基线，尚未在新工作区编译或实车验收。第三方导航框架、传感器驱动、机器人模型和系统依赖未完整收录，不能仅通过 `git clone` 重建整个车端环境。来源和逐文件 SHA-256 见 [source-baseline.json](docs/source-baseline.json)，外部依赖盘点见 [vehicle-dependencies.json](docs/vehicle-dependencies.json)。
+这是项目核心源码的初始基线，尚未在新工作区编译或实车验收。第三方导航框架、传感器驱动、机器人模型和系统依赖未完整收录，不能仅通过 `git clone` 重建整个车端环境。来源和逐文件 SHA-256 见[源码初始基线](docs/04-源码与依赖/源码初始基线.json)，外部依赖见[外部依赖盘点](docs/04-源码与依赖/外部依赖盘点.json)。
 
 首次入库不切换小车当前运行的工作区。源码的既有版权和许可保留在对应文件、包和 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 中。
 
@@ -35,8 +35,8 @@ LimoPro/
 
 ## 项目资料
 
-- 查看从小车核实的系统版本、ROS 工作区、接口、地图和启动入口。[车载环境记录](docs/vehicle-baseline.md)
-- 按项目阶段查阅 Noetic 和 Foxy 手册、官方配图，以及手册和车载配置的差异。[资料索引](docs/README.md)
+- 查看从小车核实的系统版本、ROS 工作区、接口、地图和启动入口。[车载环境记录](docs/01-项目与开发/车载环境记录.md)
+- 按项目阶段查阅 Noetic 和 Foxy 手册、官方配图，以及手册和车载配置的差异。[手册阅读指南](docs/03-官方手册/手册阅读指南.md)
 
 ## 登录小车
 
@@ -48,7 +48,7 @@ ssh LimoPro
 
 登录菜单中输入 `1` 进入 ROS 1 Noetic 环境，输入 `2` 进入 ROS 2 Foxy 环境。
 
-电脑和小车网线直连时，使用 `ssh agilex@192.168.137.102`。直连配置、Wi‑Fi 故障和 U 盘诊断步骤见[网络故障排查与恢复](docs/network-recovery.md)。
+电脑和小车网线直连时，使用 `ssh agilex@192.168.137.102`。直连配置、Wi‑Fi 故障和 U 盘诊断步骤见[网络故障排查与恢复](docs/02-连接与排障/网络故障排查与恢复.md)。
 
 ## 待补充的工作空间信息
 

@@ -6,7 +6,7 @@
 | --- | --- |
 | ROS 1 `limo_ros` | 上游为 `agilexrobotics/limo_ros`；车端提交 `4d7dc934d4008ba579ad79936207accb7cdcc878`，有本地修改。原始许可见 [LICENSE](ros1/src/limo_ros/LICENSE)。 |
 | ROS 2 `limo_ros2` | 车端提交 `416885fe706fa9d5a8667e6ed0cb02561e3b1630`；声明保留在包和文件中。部分包的许可字段仍为上游占位内容，本仓库未为其另行指定许可。 |
-| `agilex_pure_pursuit`、`set_nav_point`、`fixed_point_navigation` | 来自车端现有工作区，保留各包内既有说明。完整 Git 状态见 [采集元数据](docs/source-baseline.json)。 |
-| 手册 | 来源和官方链接见 [资料索引](docs/README.md)。 |
+| `agilex_pure_pursuit`、`set_nav_point`、`fixed_point_navigation` | 来自车端现有工作区，保留各包内既有说明。完整 Git 状态见[源码初始基线](docs/04-源码与依赖/源码初始基线.json)。 |
+| 手册 | 来源和官方链接见[手册阅读指南](docs/03-官方手册/手册阅读指南.md)。 |
 
 本文件用于记录来源，不替代各部分原有许可，也不为整个仓库统一授予新的软件许可。

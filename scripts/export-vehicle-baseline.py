@@ -93,7 +93,7 @@ def main():
                         "sha256": hashlib.sha256(data).hexdigest(),
                         "executable": bool(mode & 0o111),
                     })
-        add_json(archive, "docs/source-baseline.json", manifest)
+        add_json(archive, "docs/04-源码与依赖/源码初始基线.json", manifest)
     print(json.dumps({"archive": str(args.output), "files": len(manifest["files"])}))
 
 
