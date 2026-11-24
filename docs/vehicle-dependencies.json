@@ -1,0 +1,145 @@
+{
+  "note": "Inventory of existing external dependencies; not a complete installation lockfile.",
+  "source_repositories": [
+    {
+      "family": "ros1",
+      "name": "cartographer",
+      "path": "/home/agilex/agilex_ws/src/cartographer",
+      "commit": "ef00de2317dcf7895b09f18cc4d87f8b533a019b",
+      "tracked_changes_count": 625,
+      "tracked_change_samples": [
+        "M .bazelci/presubmit.yml",
+        " M .bazelrc",
+        " M .dockerignore",
+        " M .github/PULL_REQUEST_TEMPLATE.md",
+        " M .github/workflows/ci-bionic.yaml",
+        " M .github/workflows/ci-bullseye.yaml",
+        " M .github/workflows/ci-buster.yaml",
+        " M .github/workflows/ci-focal.yaml",
+        " M .github/workflows/ci-jammy.yaml",
+        " M .gitignore"
+      ]
+    },
+    {
+      "family": "ros1",
+      "name": "cartographer_ros",
+      "path": "/home/agilex/agilex_ws/src/cartographer_ros",
+      "commit": "c138034db0c47fe0ea5a2abe516acae02190dbf5",
+      "tracked_changes_count": 172,
+      "tracked_change_samples": [
+        "M .dockerignore",
+        " M .github/ISSUE_TEMPLATE/bug-report.md",
+        " M .github/ISSUE_TEMPLATE/general-issue.md",
+        " M .github/ISSUE_TEMPLATE/tuning-advice.md",
+        " M .github/PULL_REQUEST_TEMPLATE.md",
+        " M .travis.yml",
+        " M AUTHORS",
+        " M CONTRIBUTING.md",
+        " M Dockerfile.melodic",
+        " M Dockerfile.noetic"
+      ]
+    },
+    {
+      "family": "ros1",
+      "name": "ydlidar_ros_driver",
+      "path": "/home/agilex/agilex_ws/src/ydlidar_ros_driver",
+      "commit": "d8a47c13ef706001641c998c7a08491a5a63dc6f",
+      "tracked_changes_count": 1,
+      "tracked_change_samples": [
+        "M launch/Tmini.launch"
+      ]
+    },
+    {
+      "family": "ros1",
+      "name": "YDLidar-SDK",
+      "path": "/home/agilex/agilex_ws/src/YDLidar-SDK",
+      "commit": "6afed18a3817f529979a4806bd59e7c98e784380",
+      "tracked_changes_count": 0,
+      "tracked_change_samples": []
+    },
+    {
+      "family": "ros1",
+      "name": "ros_astra_camera",
+      "path": "/home/agilex/agilex_ws/src/ros_astra_camera",
+      "commit": "02ccb143ee5df3b7d04ce46712b370a699a3f8a8",
+      "tracked_changes_count": 1,
+      "tracked_change_samples": [
+        "M launch/dabai_dc1.launch"
+      ]
+    },
+    {
+      "family": "ros1",
+      "name": "limo_description",
+      "path": "/home/agilex/agilex_ws/src/limo_description",
+      "commit": null,
+      "tracked_changes_count": 0,
+      "tracked_change_samples": []
+    },
+    {
+      "family": "ros2",
+      "name": "navigation2",
+      "path": "/home/agilex/limo_ros2_ws/src/navigation2",
+      "commit": "ca482808a7a7c52ce01ae3c662dc2b980968fc16",
+      "tracked_changes_count": 0,
+      "tracked_change_samples": []
+    },
+    {
+      "family": "ros2",
+      "name": "ydlidar_ros2_driver",
+      "path": "/home/agilex/limo_ros2_ws/src/ydlidar_ros2_driver",
+      "commit": "c2acbfa32ed5465def97a0190208e96bcba5ce94",
+      "tracked_changes_count": 2,
+      "tracked_change_samples": [
+        "M launch/ydlidar_launch.py",
+        " M params/TminiPro.yaml"
+      ]
+    },
+    {
+      "family": "ros2",
+      "name": "YDLidar-SDK",
+      "path": "/home/agilex/limo_ros2_ws/src/YDLidar-SDK",
+      "commit": "2b7e756c2823f00ba8b80911852c4127b93213cc",
+      "tracked_changes_count": 0,
+      "tracked_change_samples": []
+    },
+    {
+      "family": "ros2",
+      "name": "OrbbecSDK_ROS2",
+      "path": "/home/agilex/limo_ros2_ws/src/OrbbecSDK_ROS2",
+      "commit": "ae8df6e904458cad6d44e149db95064a2aabf0bf",
+      "tracked_changes_count": 0,
+      "tracked_change_samples": []
+    },
+    {
+      "family": "ros2",
+      "name": "teb_local_planner",
+      "path": "/home/agilex/limo_ros2_ws/src/teb_local_planner",
+      "commit": "d6865b419ba70bf637f5125317c380e00f7944c3",
+      "tracked_changes_count": 1,
+      "tracked_change_samples": [
+        "M teb_local_planner/src/teb_local_planner_ros.cpp"
+      ]
+    },
+    {
+      "family": "ros2",
+      "name": "costmap_converter",
+      "path": "/home/agilex/limo_ros2_ws/src/costmap_converter",
+      "commit": "9565858432664e9cfe0b3556e1809336c4ab06d4",
+      "tracked_changes_count": 2,
+      "tracked_change_samples": [
+        "M costmap_converter/package.xml",
+        " M costmap_converter/test/costmap_polygons.cpp"
+      ]
+    }
+  ],
+  "debian_packages": [
+    "ros-foxy-nav2-bringup\t0.4.7-1focal.20230606.055931\tii ",
+    "ros-foxy-navigation2\t0.4.7-1focal.20230606.055548\tii ",
+    "ros-foxy-slam-toolbox\t2.4.1-1focal.20230606.054336\tii ",
+    "ros-noetic-amcl\t1.17.3-1focal.20231013.185818\tii ",
+    "ros-noetic-gmapping\t1.4.2-1focal.20231013.212542\tii ",
+    "ros-noetic-map-server\t1.17.3-1focal.20231013.185353\tii ",
+    "ros-noetic-move-base\t1.17.3-1focal.20231013.201001\tii ",
+    "ros-noetic-teb-local-planner\t0.9.1-1focal.20231013.225939\tii"
+  ]
+}

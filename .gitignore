@@ -1,0 +1,36 @@
+# Generated ROS workspace output
+**/build/
+**/devel/
+**/install/
+**/log/
+**/logs/
+**/Log/
+**/.catkin_tools/
+**/.colcon/
+**/compile_commands.json
+
+# Python and editor cache
+**/__pycache__/
+*.py[cod]
+.venv/
+.vs/
+.idea/
+*.swp
+*~
+
+# Recordings, local exports and secrets
+*.bag
+*.bag.active
+*.db3
+*.mcap
+*.tar.gz
+*.zip
+.env
+.env.*
+!.env.example
+.ssh/
+*.pem
+*.key
+
+# Earlier read-only export, retained locally for comparison
+/vehicle-code-snapshot-*/

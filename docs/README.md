@@ -1,0 +1,46 @@
+# LIMO Pro 资料索引
+
+进入车载终端后，按登录菜单选择对应手册。车载路径、默认地图和设备配置可查阅 SSH 盘点记录。[车载环境记录](vehicle-baseline.md)
+
+SSH 无法连接或 Wi‑Fi 关联失败时，查看本次实车排查记录和恢复命令。[网络故障排查与恢复](network-recovery.md)
+
+查看 NoMachine 的连接过程、日志和待验证问题。[NoMachine 连接排查记录](nomachine-connection.md)
+
+查看 TigerVNC 中文文本双向复制粘贴的解决过程、连接地址和故障检查。[VNC 双向复制粘贴排查记录](vnc-clipboard.md)
+
+查看通用的 Windows 与 Linux 网线直连配置及 SSH 登录步骤。[Windows 与 Linux 网线直连 SSH 教程](windows-linux-ethernet-ssh.md)
+
+查看纳入仓库的底盘、建图、导航和巡检示例代码及阅读入口。[底盘与导航代码索引](code-guide.md)
+
+查看学习分支、提交同步、车端工作区切换和验证记录的维护约定。[代码维护流程](code-maintenance.md)
+
+| 登录选项 | 手册 | 本地与官方版本 |
+| --- | --- | --- |
+| `1` | ROS 1 Noetic 中文手册 | [本地手册](<Limo Pro user manual(CN).md>) · [松灵官方原版](https://github.com/agilexrobotics/limo_pro_doc/blob/master/Limo%20Pro%20user%20manual%28CN%29.md) |
+| `2` | ROS 2 Foxy 中文手册 | [本地手册](<Limo Pro Ros2 Foxy user manual(CN).md>) · [松灵官方原版](https://github.com/agilexrobotics/limo_pro_doc/blob/master/Limo%20Pro%20Ros2%20Foxy%20user%20manual%28CN%29.md) |
+
+两份本地 Markdown 手册引用的配图目录未随文件提供。查看部件、模式切换和 RViz 界面时，可打开对应的松灵官方原版。
+
+## 按项目阶段查阅
+
+| 阶段 | Noetic 手册 | Foxy 手册 | 项目中要核实或记录的内容 |
+| --- | --- | --- | --- |
+| 小车入门 | §1.9 模式切换与遥控、§3–4 底盘、§5.1 雷达、§7.1 深度相机 | §1.9 模式切换与遥控、§3–4 底盘、§5.1 雷达、§7.1 深度相机 | 先识别底盘当前模式，再记录基础启动、停止、遥控和传感器数据 |
+| 自主导航 | §5.2–5.3 Gmapping / Cartographer 建图、§6.2 定位与导航 | §5.2 Cartographer 建图和保存地图、§6.2 Nav2 定位与导航 | 用测试场地的地图完成重定位和首次目标点导航。RGB-D 建图可参考两份手册的第七章 |
+| 网页控制 | §3 底盘接口与 §6.2 导航操作 | §3 底盘接口与 §6.2 Nav2 操作 | 以车载的话题和导航接口为起点，记录网页要展示的状态、控制范围与任务反馈 |
+| 巡检应用 | §6.3 路径录制与跟随、§10.7 中的多点导航示例 | §6.2 Nav2 单目标导航 | 跑通单点后验证多点执行，再补充每点的采集项、失败处理和结果记录 |
+
+## 手册与本车配置的差异
+
+- **Noetic 地图**　手册 §6.2 以 `map02` 说明地图替换。车上的差速导航入口当前引用 `map1017.yaml`，阿克曼入口引用 `map11.yaml`。
+- **Foxy 底盘与导航**　手册 §3.1 的源码路径写成了 `~/agilex_ws/src/limo_ros/limo_base`，本车 Foxy 的源码在 `~/limo_ros2_ws/src/limo_ros2/limo_base`。手册 §6.1 中的 `move_base` 是 ROS 1 术语，Foxy 的操作步骤见 §6.2。本车两个 Nav2 入口默认读取 `map1021.yaml`。
+- **Foxy 雷达与相机**　手册 §5.1 的 `lidar_rviz.launch.py` 在本车的 Foxy `limo_bringup` 安装目录中未找到，可先用基础启动入口检查 `/scan`。相机驱动已安装 `dabai.launch.py` 和 `dabai_d1.launch.py`，本车 Dabai DC1 的取流入口待实测。
+
+## 车上已有的巡检示例
+
+在 Noetic 的 `~/agilex_ws/src` 中核实了以下文件。路径跟随和多点导航均待实车验证。
+
+| 示例 | 车端文件（相对于 `~/agilex_ws/src`） | 参考章节 |
+| --- | --- | --- |
+| 录制路线和沿路线行驶 | `agilex_pure_pursuit/launch/record_path.launch`、`agilex_pure_pursuit/launch/pure_pursuit.launch` | Noetic §6.3 |
+| 按预设点导航 | `set_nav_point/script/more_task_node.py`、`set_nav_point/script/more_task_loop_node.py` | Noetic §10.7。车上的脚本位于 `script/` 子目录 |

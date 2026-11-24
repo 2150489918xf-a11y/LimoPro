@@ -1,0 +1,11 @@
+* text=auto eol=lf
+
+# Preserve the original vehicle source bytes, including legacy line endings.
+ros1/src/** -text
+ros2/src/** -text
+
+*.pgm binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary

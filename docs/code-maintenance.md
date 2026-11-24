@@ -1,0 +1,63 @@
+# 代码维护流程
+
+当前仓库：`git@github.com:2150489918xf-a11y/LimoPro.git`。Windows 与小车可以各有一份克隆，版本通过 Git 同步。`ros1/src/` 和 `ros2/src/` 是正式维护目录；首次导入保留两套代码，学习时先选一套作为当前主线。
+
+## 首次入库的含义
+
+首版保存车端选定的底盘、启动、导航配置、地图和任务示例，并记录来源、现有修改和文件校验值。初始提交是“源码采集基线”，尚不能称作经过实车验收的稳定版本。
+
+首次推送没有改变小车现有 `/home/agilex/agilex_ws` 和 `/home/agilex/limo_ros2_ws` 的文件、Git 远程地址或运行方式。此前 Windows 上提取的日期快照只作为本地对照，不进入仓库，也不再作为开发目录。
+
+## 学习阶段的工作方式
+
+建议先用 VS Code Remote SSH 查看和调试车端工作区。提交之前，需明确编辑的目录属于哪个 Git 仓库：旧工作区中的修改不会自动进入本仓库。
+
+开始使用本仓库进行车端开发时，在车上另建克隆：
+
+```bash
+git clone git@github.com:2150489918xf-a11y/LimoPro.git ~/LimoPro
+cd ~/LimoPro
+git switch -c learning/read-chassis
+```
+
+克隆操作要求小车自身具有 GitHub 访问权限；Windows 公钥已配置不代表小车也已配置。如果仓库是公开的，可以通过 HTTPS 只读克隆；推送权限需另行配置，不要把 Windows 私钥复制到小车。
+
+这个新目录的依赖尚未补齐。正式切换前，应准备所选 ROS 的依赖、在 `ros1/` 或 `ros2/` 中编译，再在独立终端加载新工作区环境并验证实际使用的包路径。ROS 1 与 ROS 2 使用不同终端加载环境。原车工作区保留作对照和恢复依据。
+
+验证完成前若仍修改旧工作区，需要逐项比较并同步到本仓库的对应文件，再提交；不要认为向旧厂商仓库执行 `git push` 就会更新本仓库。
+
+## 每次修改和同步
+
+在本仓库的同一工作副本中完成：
+
+```bash
+git status
+git diff
+# 只暂存本次确实要提交的文件，例如：
+git add ros1/src/limo_ros/limo_base/src/limo_driver.cpp
+git commit -m "Describe the chassis change"
+git push -u origin HEAD
+```
+
+一个提交尽量对应一个能说明清楚的改动。在提交说明或学习记录中写明修改原因、编译情况和测试结果；没有测试时写明未测试。
+
+另一台设备在工作区干净、分支正确的前提下，用 `git pull --ff-only` 更新同一分支。有本地修改时，先查看和处理修改，再更新。`git pull` 只更新文件；C++、消息定义和依赖变化通常需要重新编译，配置和程序更新后也需要按运行方式重新启动节点。
+
+`main` 作为双方约定的主线。学习尝试先保存在功能分支，检查后合入主线；经过实车验证的提交再标记测试日期、地图、底盘模式和验证范围。
+
+## 提交内容
+
+源码、启动文件、参数、必要地图、依赖说明和学习文档进入 Git。`.gitignore` 排除编译输出、日志、Python 缓存、录制数据、私钥和环境密钥文件。大型数据另存，保留可查询的路径或版本记录。
+
+仓库保留车端原始源码的字节内容和可执行标记，编辑器默认使用 UTF-8、LF。Windows 不保存 Linux 可执行位，新增需要直接执行的脚本时可用 `git update-index --chmod=+x 路径` 设置。
+
+## 重新采集原车源码
+
+`scripts/export-vehicle-baseline.py` 只读取指定车端目录，并生成新的压缩包。它不是双向同步工具，也不负责部署。程序输出的归档包含 `ros1/`、`ros2/` 和 `docs/source-baseline.json`；重新采集时应解压到独立比较目录，避免覆盖已维护的代码或首次采集记录。
+
+在小车运行的示例：
+
+```bash
+python3 /path/to/export-vehicle-baseline.py \
+  --output /tmp/limopro-new-capture.tar.gz
+```
