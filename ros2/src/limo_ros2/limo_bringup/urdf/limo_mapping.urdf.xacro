@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<robot name="limo_mapping" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!--
+    Display-only model for the real chassis. The chassis driver owns
+    odom -> base_link; limo_start owns the laser/camera/IMU transforms.
+    Keep all additional links below base_link and out of that sensor tree.
+    Reuse the meshes already provided by the vehicle's limo_description.
+  -->
+  <xacro:property name="model_pi" value="3.141592653589793"/>
+  <xacro:property name="wheelbase" value="0.2"/>
+  <xacro:property name="visual_wheel_track" value="0.13"/>
+
+  <link name="base_link"/>
+
+  <link name="limo_visual_body_link">
+    <visual>
+      <origin xyz="0 0 -0.15" rpy="0 0 ${model_pi / 2}"/>
+      <geometry>
+        <mesh filename="package://limo_description/meshes/limo_base.dae"/>
+      </geometry>
+    </visual>
+  </link>
+  <joint name="limo_visual_body_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="limo_visual_body_link"/>
+  </joint>
+
+  <xacro:macro name="visual_wheel" params="name x y roll axis_y">
+    <link name="limo_visual_${name}_wheel_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://limo_description/meshes/limo_wheel.dae"/>
+        </geometry>
+      </visual>
+    </link>
+    <joint name="limo_visual_${name}_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="limo_visual_${name}_wheel_link"/>
+      <origin xyz="${x} ${y} -0.10" rpy="${roll} 0 0"/>
+      <axis xyz="0 ${axis_y} 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:visual_wheel name="front_left" x="${wheelbase / 2}"
+                      y="${visual_wheel_track / 2}" roll="0" axis_y="1"/>
+  <xacro:visual_wheel name="front_right" x="${wheelbase / 2}"
+                      y="${-visual_wheel_track / 2}" roll="${model_pi}" axis_y="-1"/>
+  <xacro:visual_wheel name="rear_left" x="${-wheelbase / 2}"
+                      y="${visual_wheel_track / 2}" roll="0" axis_y="1"/>
+  <xacro:visual_wheel name="rear_right" x="${-wheelbase / 2}"
+                      y="${-visual_wheel_track / 2}" roll="${model_pi}" axis_y="-1"/>
+</robot>

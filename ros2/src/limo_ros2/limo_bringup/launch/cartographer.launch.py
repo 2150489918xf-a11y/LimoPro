@@ -18,6 +18,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
+from launch.conditions import IfCondition
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
 from launch.actions import IncludeLaunchDescription
@@ -52,6 +53,17 @@ def generate_launch_description():
             'use_sim_time',
             default_value='false',
             description='Use simulation (Gazebo) clock if true'),
+        DeclareLaunchArgument(
+            'use_robot_model',
+            default_value='true',
+            description='Publish the real-chassis display model and wheel joint states'),
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                ThisLaunchFileDir(), '/limo_model.launch.py']),
+            condition=IfCondition(LaunchConfiguration('use_robot_model')),
+            launch_arguments={'use_sim_time': use_sim_time}.items(),
+        ),
 
         Node(
             package='cartographer_ros',

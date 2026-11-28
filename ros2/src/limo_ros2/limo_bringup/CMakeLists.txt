@@ -31,8 +31,8 @@ find_package(ament_cmake REQUIRED)
 # endif()
 
 install(
-    DIRECTORY rviz param maps config_files launch
-    launch DESTINATION share/${PROJECT_NAME}/
+    DIRECTORY rviz param maps config_files launch urdf
+    DESTINATION share/${PROJECT_NAME}/
 )
 
 ament_package()
