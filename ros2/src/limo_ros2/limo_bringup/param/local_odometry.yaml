@@ -1,0 +1,68 @@
+# One launch entry loads one profile. Register compatible backends here.
+schema_version: 1
+default_profile: raw
+
+profiles:
+  raw:
+    description: Chassis velocity integration using onboard IMU yaw (legacy output)
+    driver:
+      odom_topic: /odom
+      publish_tf: true
+    nodes: []
+
+  ekf:
+    description: Planar robot_localization EKF, chassis vx/vy plus IMU gyro Z
+    driver:
+      odom_topic: /odom/raw
+      publish_tf: false
+      # Initial guesses, not measured sensor specifications. Tune using recordings.
+      twist_linear_variance: 0.0025         # (m/s)^2, sigma = 0.05 m/s
+      twist_angular_variance: 0.0025        # (rad/s)^2
+      imu_angular_velocity_variance: 0.0004 # (rad/s)^2, sigma = 0.02 rad/s
+    nodes:
+      - package: robot_localization
+        executable: ekf_node
+        name: local_ekf
+        remappings:
+          - [odometry/filtered, /odom]
+        parameters:
+          frequency: 50.0
+          sensor_timeout: 0.2
+          two_d_mode: true
+          publish_tf: true
+          publish_acceleration: false
+          print_diagnostics: true
+          reset_on_time_jump: true
+          transform_time_offset: 0.0
+          transform_timeout: 0.0
+          map_frame: map
+          odom_frame: odom
+          base_link_frame: base_link
+          world_frame: odom
+          use_control: false
+
+          # State order: x y z roll pitch yaw vx vy vz vroll vpitch vyaw ax ay az
+          # Raw pose contains IMU yaw: never fuse it again as independent data.
+          odom0: /odom/raw
+          odom0_config: [false, false, false,
+                         false, false, false,
+                         true,  true,  false,
+                         false, false, false,
+                         false, false, false]
+          odom0_queue_size: 20
+          odom0_nodelay: true
+          odom0_differential: false
+          odom0_relative: false
+
+          # Gyro Z only. No absolute yaw/magnetometer or acceleration integration.
+          imu0: /imu
+          imu0_config: [false, false, false,
+                        false, false, false,
+                        false, false, false,
+                        false, false, true,
+                        false, false, false]
+          imu0_queue_size: 30
+          imu0_nodelay: true
+          imu0_differential: false
+          imu0_relative: false
+          imu0_remove_gravitational_acceleration: false

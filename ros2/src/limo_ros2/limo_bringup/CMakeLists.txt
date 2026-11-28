@@ -35,4 +35,9 @@ install(
     DESTINATION share/${PROJECT_NAME}/
 )
 
+if(BUILD_TESTING)
+  find_package(ament_cmake_pytest REQUIRED)
+  ament_add_pytest_test(local_odometry_profiles test/test_local_odometry.py TIMEOUT 90)
+endif()
+
 ament_package()

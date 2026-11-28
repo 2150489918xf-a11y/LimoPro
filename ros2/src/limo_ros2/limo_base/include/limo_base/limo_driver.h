@@ -101,7 +101,11 @@ private:
 
     bool pub_odom_tf_ = false;
     bool use_mcnamu_ = false;
-    double present_theta_,last_theta_,delta_theta_,real_theta_,rad;
+    bool imu_yaw_initialized_ = false;
+    double last_theta_ = 0.0, real_theta_ = 0.0;
+    double twist_linear_variance_ = 0.0025;
+    double twist_angular_variance_ = 0.0025;
+    double imu_angular_velocity_variance_ = 0.0004;
     rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_publisher_;
     rclcpp::Publisher<limo_msgs::msg::LimoStatus>::SharedPtr status_publisher_;
 
@@ -121,8 +125,8 @@ private:
     double position_y_ = 0.0;
     double theta_ = 0.0;
 
-    ImuData imu_data_;
-    uint8_t motion_mode_;  // current motion type
+    ImuData imu_data_{};
+    uint8_t motion_mode_ = MODE_FOUR_DIFF;  // overwritten by chassis status
 
     static constexpr double max_inner_angle_ = 0.48869;  // 28 degree
     static constexpr double track_ = 0.172;           // m (left right wheel distance)

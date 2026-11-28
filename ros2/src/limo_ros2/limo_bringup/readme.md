@@ -2,6 +2,10 @@
 建图入口现已默认加载实车显示模型，模型依赖、TF 分工和已运行会话的接入方法见
 [建图模型显示说明](ROBOT_MODEL.md)。下面保留历史操作记录，其中部分建图命令不是当前推荐入口。
 
+局部里程计支持同一入口按配置选择 `raw` / `ekf`：
+`ros2 launch limo_bringup limo_start.launch.py odometry:=ekf`。
+注册表、依赖与切换流程见[局部里程计说明](LOCAL_ODOMETRY.md)。
+
 下面的脚本一条一条运行， 注意不能在后台运行
  
 # 导航

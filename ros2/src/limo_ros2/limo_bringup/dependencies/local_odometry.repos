@@ -1,0 +1,10 @@
+# Optional source-build fallback for ROS 2 Foxy when binary installation is unavailable.
+repositories:
+  robot_localization:
+    type: git
+    url: https://github.com/cra-ros-pkg/robot_localization.git
+    version: a9c96ebc245575adc06cea4dad5578a3ca3bdb02 # 3.1.2
+  geographic_info:
+    type: git
+    url: https://github.com/ros-geographic-info/geographic_info.git
+    version: 8e60e08d14ff9b650f2160f85a98866f5eac4475 # 1.0.3, Foxy compatible
