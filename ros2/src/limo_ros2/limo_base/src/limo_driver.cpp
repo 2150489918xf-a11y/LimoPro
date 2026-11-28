@@ -29,8 +29,7 @@
  */
 
 #include "limo_base/limo_driver.h"
-#include <cmath>
-#include <stdexcept>
+int flag=0; 
 
 namespace AgileX {
 
@@ -40,7 +39,6 @@ LimoDriver::LimoDriver(std::string node_name):rclcpp::Node(node_name),keep_runni
     this->declare_parameter("port_name");   //声明参数
     this->declare_parameter("odom_frame");
     this->declare_parameter("base_frame");
-    this->declare_parameter<std::string>("odom_topic_name", "/odom");
     this->declare_parameter("pub_odom_tf");
     this->declare_parameter("use_mcnamu");
     this->declare_parameter("control_rate");  
@@ -48,24 +46,14 @@ LimoDriver::LimoDriver(std::string node_name):rclcpp::Node(node_name),keep_runni
     this->get_parameter_or<std::string>("port_name", port_name, "ttyTHS1");//获取参数
     this->get_parameter_or<std::string>("odom_frame", odom_frame_, "odom");
     this->get_parameter_or<std::string>("base_frame", base_frame_, "base_link");
-    this->get_parameter_or<std::string>("odom_topic_name", odom_topic_name_, "/odom");
-    this->get_parameter_or<bool>("pub_odom_tf", pub_odom_tf_, false);
-    this->get_parameter_or<bool>("use_mcnamu", use_mcnamu_, false);
-    twist_linear_variance_ = this->declare_parameter<double>("twist_linear_variance", 0.0025);
-    twist_angular_variance_ = this->declare_parameter<double>("twist_angular_variance", 0.0025);
-    imu_angular_velocity_variance_ = this->declare_parameter<double>("imu_angular_velocity_variance", 0.0004);
-    for (double variance : {twist_linear_variance_, twist_angular_variance_, imu_angular_velocity_variance_}) {
-        if (!std::isfinite(variance) || variance <= 0.0) {
-            throw std::invalid_argument("Odometry and gyro variances must be finite and positive");
-        }
-    }
+    this->get_parameter_or<bool>("pub_odom_tf", pub_odom_tf_, "false");
+    this->get_parameter_or<bool>("use_mcnamu", use_mcnamu_, "false");
 
     std::cout << "Loading parameters: " << std::endl;
     std::cout << "- port name: " << port_name << std::endl;
     std::cout << "- odom frame name: " << odom_frame_ << std::endl;
     std::cout << "- base frame name: " << base_frame_ << std::endl;
-    std::cout << "- odom topic name: " << odom_topic_name_ << std::endl;
-    std::cout << "- publish odom TF: " << pub_odom_tf_ << std::endl;
+    std::cout << "- odom topic name: " << pub_odom_tf_ << std::endl;
     std::cout << "- use_mcnamu_: " << use_mcnamu_ << std::endl;
 
     // ros::NodeHandle nh;createQuaternionFromRPY
@@ -82,7 +70,7 @@ LimoDriver::LimoDriver(std::string node_name):rclcpp::Node(node_name),keep_runni
         motion_mode_ = MODE_MCNAMU;
     }
     tf_broadcaster_=std::make_shared<tf2_ros::TransformBroadcaster>(*this);
-    odom_publisher_=this->create_publisher<nav_msgs::msg::Odometry>(odom_topic_name_,50);
+    odom_publisher_=this->create_publisher<nav_msgs::msg::Odometry>("/odom",50);
     status_publisher_ = this->create_publisher<limo_msgs::msg::LimoStatus>("/limo_status",50);
     imu_publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("/imu",10);
 
@@ -95,10 +83,8 @@ LimoDriver::LimoDriver(std::string node_name):rclcpp::Node(node_name),keep_runni
     // motion_cmd_sub_ = nh.subscribe<geometry_msgs::Twist>("/cmd_vel", 5, &LimoDriver::twistCmdCallback, this);
     
     // connect to the serial port
-    if (port_name.find("tty") != port_name.npos || port_name.find("/dev/") == 0) {
-        if (port_name.find("/dev/") != 0) {
-            port_name = "/dev/" + port_name;
-        }
+    if (port_name.find("tty") != port_name.npos){ 
+        port_name = "/dev/" + port_name;
         keep_running_=true;
         this->connect(port_name, B460800);
         this->enableCommandedMode();
@@ -502,13 +488,20 @@ void LimoDriver::publishIMUData(double stamp) {
     tf2::Quaternion q;
     q.setRPY(0.0, 0.0, degToRad(imu_data_.yaw));
 
-    if (!imu_yaw_initialized_) {
-        last_theta_ = imu_data_.yaw;
-        imu_yaw_initialized_ = true;
+    if (flag==0)
+    {
+        double present_theta_ =imu_data_.yaw;
+        double last_theta_ = imu_data_.yaw;
+        flag=1;    
+        
     }
-    // Preserve slow turns and handle the sensor's +/-180 degree wrap.
-    real_theta_ += normalizeAngle(degToRad(imu_data_.yaw - last_theta_)) * 180.0 / M_PI;
-    last_theta_ = imu_data_.yaw;
+    //ROS_INFO("flag:%d",flag);
+    present_theta_ = imu_data_.yaw;
+    delta_theta_ = present_theta_ - last_theta_;
+    if(delta_theta_< 0.1 && delta_theta_> -0.1) delta_theta_=0;
+    real_theta_ = real_theta_ + delta_theta_;
+    last_theta_ = present_theta_;
+    //ROS_INFO("present_theta_:%f;delta_theta_:%f;real_theta_:%f;last_theta_:%f",present_theta_,delta_theta_,real_theta_,last_theta_);
 
     imu_msg.orientation.x = q.x();
     imu_msg.orientation.y = q.y();
@@ -519,9 +512,9 @@ void LimoDriver::publishIMUData(double stamp) {
     imu_msg.linear_acceleration_covariance[4] = 1.0f;
     imu_msg.linear_acceleration_covariance[8] = 1.0f;
 
-    imu_msg.angular_velocity_covariance[0] = imu_angular_velocity_variance_;
-    imu_msg.angular_velocity_covariance[4] = imu_angular_velocity_variance_;
-    imu_msg.angular_velocity_covariance[8] = imu_angular_velocity_variance_;
+    imu_msg.angular_velocity_covariance[0] = 1e-6;
+    imu_msg.angular_velocity_covariance[4] = 1e-6;
+    imu_msg.angular_velocity_covariance[8] = 1e-6;
 
     imu_msg.orientation_covariance[0] = 1e-6;
     imu_msg.orientation_covariance[4] = 1e-6;
@@ -576,7 +569,7 @@ void LimoDriver::publishOdometry(double stamp, double linear_velocity,
         default:
             break;
     }
-    const double rad = degToRad(real_theta_);
+    rad = degToRad(real_theta_);
 
     position_x_ += cos(rad) * vx * dt - sin(rad) * vy * dt;
     position_y_ += sin(rad) * vx * dt + cos(rad) * vy * dt;
@@ -622,14 +615,6 @@ void LimoDriver::publishOdometry(double stamp, double linear_velocity,
     odom_msg.twist.twist.linear.x = vx;
     odom_msg.twist.twist.linear.y = vy;
     odom_msg.twist.twist.angular.z = wz;
-
-    // Zero covariance is not a calibrated noise estimate for sensor fusion.
-    odom_msg.twist.covariance[0] = twist_linear_variance_;
-    odom_msg.twist.covariance[7] = twist_linear_variance_;
-    odom_msg.twist.covariance[14] = 1.0;
-    odom_msg.twist.covariance[21] = 1.0;
-    odom_msg.twist.covariance[28] = 1.0;
-    odom_msg.twist.covariance[35] = twist_angular_variance_;
 
     odom_msg.pose.covariance[0] = 0.1;
     odom_msg.pose.covariance[7] = 0.1;

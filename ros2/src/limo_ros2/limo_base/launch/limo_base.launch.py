@@ -25,10 +25,6 @@ def generate_launch_description():
                                                  description='Simulation control loop update rate')
     use_mcnamu_arg = DeclareLaunchArgument('use_mcnamu', default_value='False',
                                                  description='use mcnamu')
-    use_sim_time_arg = DeclareLaunchArgument('use_sim_time', default_value='false')
-    linear_variance_arg = DeclareLaunchArgument('twist_linear_variance', default_value='0.0025')
-    angular_variance_arg = DeclareLaunchArgument('twist_angular_variance', default_value='0.0025')
-    gyro_variance_arg = DeclareLaunchArgument('imu_angular_velocity_variance', default_value='0.0004')
     
 
 
@@ -38,7 +34,7 @@ def generate_launch_description():
         output='screen',
         emulate_tty=True,
         parameters=[{
-                'use_sim_time': LaunchConfiguration('use_sim_time'),
+                # 'use_sim_time': launch.substitutions.LaunchConfiguration('use_sim_time'),
                 'port_name': launch.substitutions.LaunchConfiguration('port_name'),                
                 'odom_frame': launch.substitutions.LaunchConfiguration('odom_frame'),
                 'base_frame': launch.substitutions.LaunchConfiguration('base_frame'),
@@ -46,17 +42,11 @@ def generate_launch_description():
                 'pub_odom_tf': launch.substitutions.LaunchConfiguration('pub_odom_tf'),
                 'control_rate': launch.substitutions.LaunchConfiguration('control_rate'),
                 'use_mcnamu': launch.substitutions.LaunchConfiguration('use_mcnamu'),
-                'twist_linear_variance': LaunchConfiguration('twist_linear_variance'),
-                'twist_angular_variance': LaunchConfiguration('twist_angular_variance'),
-                'imu_angular_velocity_variance': LaunchConfiguration('imu_angular_velocity_variance'),
 
         }])
 
     return LaunchDescription([
-        use_sim_time_arg,
-        linear_variance_arg,
-        angular_variance_arg,
-        gyro_variance_arg,
+        # use_sim_time_arg,
         port_name_arg,        
         odom_frame_arg,
         base_link_frame_arg,
